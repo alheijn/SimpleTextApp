@@ -1,3 +1,7 @@
+// This file is not in use, old approach that didn't work.
+// Working approach for network task: MyViewModel.kt
+
+
 package com.example.simpletextapp
 
 import android.util.Log
