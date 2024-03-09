@@ -69,13 +69,12 @@ fun TextApp(modifier: Modifier = Modifier) {
                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
                 // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
 
-
-                CalculationDisplay(calculatedValueState = calculatedValueState, submittedText = submittedText, modifier = Modifier.align(Alignment.CenterHorizontally))
-
                 /*if (submittedText.value.isNotEmpty()){
                     SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
                 }*/
                 SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                CalculationDisplay(calculatedValueState = calculatedValueState, submittedText = submittedText, modifier = Modifier.align(Alignment.CenterHorizontally))
 
             }
         }
@@ -111,10 +110,11 @@ fun CalculationDisplay(calculatedValueState: MutableState<String>, submittedText
     calculatedValueState.value = sortDigits(submittedText.value)
 
     Row(modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color.Cyan) ) {
-        Text(text = "Calculated Value: ",
+        .fillMaxWidth()
+        .padding(16.dp)
+        .background(Color.Cyan) ) {
+        Text(
+            text = "Calculated value: ",
             modifier = modifier.padding(16.dp))
         Text(
             text = calculatedValueState.value,
@@ -134,12 +134,18 @@ fun handleSubmission(textState: MutableState<String>, submittedText: MutableStat
 
 @Composable
 fun SubmittedText(text: String, modifier: Modifier = Modifier){
-    Text(
-        text = text,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color.Green))
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+        .background(Color.Green)) {
+        Text(
+            text = "Submitted value:",
+            modifier = modifier.padding(16.dp))
+        Text(
+            text = text,
+            modifier = modifier.padding(16.dp)
+        )
+    }
 }
 
 @Preview(
