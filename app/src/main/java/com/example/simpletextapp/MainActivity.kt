@@ -3,10 +3,10 @@ package com.example.simpletextapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,10 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.simpletextapp.ui.theme.SimpleTextAppTheme
+import sortDigits   // custom function for calculation task 3
 
 
 class MainActivity : ComponentActivity() {
@@ -45,13 +46,17 @@ fun TextApp(modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
+    val calculatedValueState = remember {
+        mutableStateOf("")
+    }
+
     MaterialTheme {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
-                UserInput(textState = textState)
+            Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+                UserInput(textState = textState, modifier)
 
 /*                SubmitButton(onClick = {
                         submittedText.value = textState.value
@@ -64,9 +69,14 @@ fun TextApp(modifier: Modifier = Modifier) {
                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
                 // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
 
-                if (submittedText.value.isNotEmpty()){
-                    SubmittedText(text = submittedText.value)
-                }
+
+                CalculationDisplay(calculatedValueState = calculatedValueState, submittedText = submittedText, modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                /*if (submittedText.value.isNotEmpty()){
+                    SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
+                }*/
+                SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
+
             }
         }
     }
@@ -77,7 +87,7 @@ fun UserInput(textState: MutableState<String>, modifier: Modifier = Modifier){
     TextField(
         value = textState.value,
         onValueChange = {textState.value = it},
-        label = {Text("Enter some text")},
+        label = {Text("Enter Matrikelnummer")},
         modifier = modifier
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
@@ -96,6 +106,23 @@ fun SubmitButton(
     }
 }
 
+@Composable
+fun CalculationDisplay(calculatedValueState: MutableState<String>, submittedText: MutableState<String>, modifier: Modifier = Modifier){
+    calculatedValueState.value = sortDigits(submittedText.value)
+
+    Row(modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color.Cyan) ) {
+        Text(text = "Calculated Value: ",
+            modifier = modifier.padding(16.dp))
+        Text(
+            text = calculatedValueState.value,
+            modifier = modifier.padding(16.dp)
+        )
+    }
+}
+
 /**
  * called when the submit button is clicked.
  * writes textState content to submittedText
@@ -106,8 +133,13 @@ fun handleSubmission(textState: MutableState<String>, submittedText: MutableStat
 }
 
 @Composable
-fun SubmittedText(text: String){
-    Text(text = text)
+fun SubmittedText(text: String, modifier: Modifier = Modifier){
+    Text(
+        text = text,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color.Green))
 }
 
 @Preview(
