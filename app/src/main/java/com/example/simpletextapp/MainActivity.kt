@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import sortDigits
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TextApp(modifier: Modifier = Modifier) {
-    val textState = remember {
+    val matNoState = remember {
         mutableStateOf("")
     }
     val submittedText = remember {
@@ -62,25 +63,32 @@ fun TextApp(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .height(100.dp))
 
-                UserInputTextField(textState = textState, modifier = Modifier)
+                UserInputTextField(matNoState = matNoState, modifier = Modifier)
 
-/*                SubmitButton(onClick = {
+                /*SubmitButton(onClick = {
                         submittedText.value = textState.value
                         textState.value = "" },
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
                 )*/
-                SubmitButton(
-                    textState, submittedText, onSubmit = ::handleSubmission,
-                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
-                // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
+                Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally).padding(top = 16.dp)) {
+                    SubmitAndCalcButton(
+                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState,
+                        onSubmit = ::handleSubmission,
+                        modifier = Modifier
+                    )
+                    // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
+
+                    CalculateButton(matNoState = matNoState, calculatedValueState = calculatedValueState)
+
+                }
 
                 /*if (submittedText.value.isNotEmpty()){
                     SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
                 }*/
-                SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
+                SubmittedValueText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
 
-                CalculationDisplay(calculatedValueState = calculatedValueState, submittedText = submittedText, modifier = Modifier.align(Alignment.CenterHorizontally))
+                CalculatedValueDisplay(calculatedValueState = calculatedValueState, modifier = Modifier.align(Alignment.CenterHorizontally))
 
             }
         }
@@ -88,10 +96,10 @@ fun TextApp(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UserInputTextField(textState: MutableState<String>, modifier: Modifier = Modifier){
+fun UserInputTextField(matNoState: MutableState<String>, modifier: Modifier = Modifier){
     TextField(
-        value = textState.value,
-        onValueChange = {textState.value = it},
+        value = matNoState.value,
+        onValueChange = {matNoState.value = it},
         label = {Text("Enter Matrikelnummer")},
         modifier = modifier
             .fillMaxWidth(),
@@ -100,24 +108,65 @@ fun UserInputTextField(textState: MutableState<String>, modifier: Modifier = Mod
 }
 
 @Composable
-fun SubmitButton(
-    textState: MutableState<String>,
+fun SubmitAndCalcButton(
+    matNoState: MutableState<String>,
     submittedText: MutableState<String>,
-    onSubmit: (MutableState<String>, MutableState<String>) -> Unit,
+    calculatedValueState: MutableState<String>,
+    onSubmit: (MutableState<String>, MutableState<String>, MutableState<String>) -> Unit,
     modifier: Modifier = Modifier)
 {
     Button(
-        onClick = {onSubmit(textState, submittedText)},
-        modifier = modifier
-            .padding(top = 16.dp)) {
-        Text("Submit +\nCalculate")
+        onClick = {onSubmit(matNoState, submittedText, calculatedValueState)},
+        modifier = Modifier
+            .padding(end = 16.dp)
+            .height(60.dp)) {
+        Text("Submit +\nCalculate", textAlign = TextAlign.Center)
+    }
+}
+
+/**
+ * called when the submit button is clicked.
+ * writes textState content to submittedText
+ */
+fun handleSubmission(matNoState: MutableState<String>, submittedText: MutableState<String>, calculatedValueState: MutableState<String>) {
+    submittedText.value = matNoState.value
+    matNoState.value = ""
+    // calculate the value of the submitted value (see calculateTask.kt):
+    calculatedValueState.value = sortDigits(submittedText.value)
+}
+
+@Composable
+fun SubmittedValueText(text: String, modifier: Modifier = Modifier){
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+        .background(Color.Green)) {
+        Text(
+            text = "Submitted value:",
+            modifier = modifier.padding(16.dp))
+        Text(
+            text = text,
+            modifier = modifier.padding(16.dp)
+        )
     }
 }
 
 @Composable
-fun CalculationDisplay(calculatedValueState: MutableState<String>, submittedText: MutableState<String>, modifier: Modifier = Modifier){
-    // calculate the value of the submitted value (see calculateTask.kt):
-    calculatedValueState.value = sortDigits(submittedText.value)
+fun CalculateButton(matNoState: MutableState<String>, calculatedValueState: MutableState<String>, modifier: Modifier = Modifier){
+    Button(
+        onClick = {
+            calculatedValueState.value = sortDigits(matNoState.value)
+            //matNoState.value = ""
+                  },
+        modifier = Modifier
+            .padding(end = 16.dp)
+            .height(60.dp)) {
+        Text("Calculate\nOnly", textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+fun CalculatedValueDisplay(calculatedValueState: MutableState<String>, modifier: Modifier = Modifier){
 
     Row(modifier = modifier
         .fillMaxWidth()
@@ -128,31 +177,6 @@ fun CalculationDisplay(calculatedValueState: MutableState<String>, submittedText
             modifier = modifier.padding(16.dp))
         Text(
             text = calculatedValueState.value,
-            modifier = modifier.padding(16.dp)
-        )
-    }
-}
-
-/**
- * called when the submit button is clicked.
- * writes textState content to submittedText
- */
-fun handleSubmission(textState: MutableState<String>, submittedText: MutableState<String>) {
-    submittedText.value = textState.value
-    textState.value = ""
-}
-
-@Composable
-fun SubmittedText(text: String, modifier: Modifier = Modifier){
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .padding(16.dp)
-        .background(Color.Green)) {
-        Text(
-            text = "Submitted value:",
-            modifier = modifier.padding(16.dp))
-        Text(
-            text = text,
             modifier = modifier.padding(16.dp)
         )
     }
