@@ -18,12 +18,12 @@ import kotlinx.coroutines.CancellationException
 // https://developer.android.com/topic/libraries/architecture/viewmodel
 class MyViewModel: ViewModel() {
 
-    // the private _matNoState provides a mutable container for holding the internal state data
-    private val _matNoState = mutableStateOf("")
-    // the public textState acts as a read-only copy for the UI to observe the state and trigger recompositions
-    val matNoState: State<String> = _matNoState
+    val matNoState = mutableStateOf("")
 
+    // pattern: see android documentation & tutorials -->
+    // the private _matNoState provides a mutable container for holding the internal state data
     private val _responseState = mutableStateOf("")
+    // the public textState acts as a read-only copy for the UI to observe the state and trigger recompositions
     val responseState: State<String> = _responseState
     fun fetchData(){
         val serverAddress = "se2-submission.aau.at" // Replace with your server's IP address
@@ -33,6 +33,8 @@ class MyViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {// launch coroutine for communication with server
             val job = coroutineContext.job  // retrieve current job (coroutine task?)
 
+            Log.d("fetchData()", "matNoState: ${matNoState.value}")
+
             // here I wanted to try using kotlin's "use" function.
             // it automatically deals with the basic resource management of closable resources.
             try {
@@ -40,9 +42,9 @@ class MyViewModel: ViewModel() {
                     PrintWriter(socket.getOutputStream(), true).use { outputStream ->
                         BufferedReader(InputStreamReader(socket.getInputStream())).use { inputStream ->
                             // write data to server via outputStream:
-                            val messageToSend = "11702848"  // for testing
-                            outputStream.println(messageToSend)
-                            //outputStream.println(_matNoState.value)
+                            //val messageToSend = "11702848"  // for testing
+                            //outputStream.println(messageToSend)
+                            outputStream.println(matNoState.value)
 
                             // read response from the server
                             val response = inputStream.readLine()

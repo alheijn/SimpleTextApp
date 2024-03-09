@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,12 +41,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             TextApp(modifier = Modifier.padding(8.dp))
         }
-
     }
 }
 
 @Composable
-fun TextApp(modifier: Modifier = Modifier) {
+fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {
     val matNoState = remember {
         mutableStateOf("")
     }
@@ -57,9 +57,10 @@ fun TextApp(modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
-    val serverResponseState = remember {
+    /*val serverResponseState = remember {
         mutableStateOf("")
-    }
+    }*/
+    val serverResponseState = viewModel.responseState
 
 
     MaterialTheme {
@@ -84,7 +85,7 @@ fun TextApp(modifier: Modifier = Modifier) {
                     .align(alignment = Alignment.CenterHorizontally)
                     .padding(top = 16.dp)) {
                     SubmitAndCalcButton(
-                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState, serverResponseState = serverResponseState,
+                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState,
                         onSubmit = ::handleSubmission,
                         modifier = Modifier
                     )
@@ -125,7 +126,7 @@ fun SubmitAndCalcButton(
     matNoState: MutableState<String>,
     submittedText: MutableState<String>,
     calculatedValueState: MutableState<String>,
-    serverResponseState: MutableState<String>,
+    //serverResponseState: MutableState<String>,
     onSubmit: (MutableState<String>, MutableState<String>, MutableState<String>) -> Unit,
     viewModel: MyViewModel = viewModel(),
     modifier: Modifier = Modifier)
@@ -135,9 +136,11 @@ fun SubmitAndCalcButton(
     Button(
         onClick = {
             onSubmit(matNoState, submittedText, calculatedValueState)
+            Log.d("SubmitAndCalcButton onClick()", "submittedText.value = ${submittedText.value}")
+            viewModel.matNoState.value = submittedText.value
             viewModel.fetchData()   // "update" viewModel
-            serverResponseState.value = viewModel.responseState.value   // get new data from viewModel
-            Log.d("SubmitAndCalcButton onClick()", "serverResponseState.value = ${serverResponseState.value}")
+            //serverResponseState.value = viewModel.responseState.value   // get new data from viewModel
+            //Log.d("SubmitAndCalcButton onClick()", "serverResponseState.value = ${serverResponseState.value}")
                   },
         modifier = Modifier
             .padding(end = 16.dp)
@@ -147,7 +150,7 @@ fun SubmitAndCalcButton(
 }
 
 @Composable
-fun ServerResponseText(serverResponseState: MutableState<String>, modifier: Modifier = Modifier){
+fun ServerResponseText(serverResponseState: State<String>, modifier: Modifier = Modifier){
     Row(modifier = modifier
         .fillMaxWidth()
         .padding(16.dp)
