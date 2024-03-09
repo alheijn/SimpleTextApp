@@ -32,3 +32,9 @@ Wahrscheinlich werde ich die Aufgabe nach dieser Fertigstellung noch einmal von 
 da in der Gruppenarbeit während dem Semester wohl eher damit gearbeitet werden wird. 
 Für wen auch immer diese Abgabe korrigieren muss, es tut mir leid :D
 It's not pretty but it works...
+![Screenshot 2024-03-09 at 23 09 32](https://github.com/alheijn/SimpleTextApp/assets/72282853/02bec8ed-dc56-4933-aa77-327cf7150e11
+![Screenshot 2024-03-09 at 23 11 21](https://github.com/alheijn/SimpleTextApp/assets/72282853/9edd8deb-4f37-4f22-b3d5-8b3616a1dc6d)
+)
+
+
+
