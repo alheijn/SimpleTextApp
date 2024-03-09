@@ -3,10 +3,9 @@ package com.example.simpletextapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,15 +23,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.simpletextapp.ui.theme.SimpleTextAppTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: NetworkViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TextApp(modifier = Modifier.padding(8.dp))
         }
+
     }
 }
 
@@ -44,6 +46,13 @@ fun TextApp(modifier: Modifier = Modifier) {
     val submittedText = remember {
         mutableStateOf("")
     }
+
+    val responseState = remember {
+        mutableStateOf("test")
+    }
+
+    val viewModel: NetworkViewModel = viewModel()
+    // retrieve the NetworkViewModel
 
     MaterialTheme {
         Surface(
@@ -67,6 +76,15 @@ fun TextApp(modifier: Modifier = Modifier) {
                 if (submittedText.value.isNotEmpty()){
                     SubmittedText(text = submittedText.value)
                 }
+
+                NetworkSubmitButton(
+                    requestState = textState,
+                    responseState = responseState,
+                    viewModel = viewModel,
+                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                )
+
+                ResponseText(responseState = responseState)
             }
         }
     }
@@ -80,7 +98,7 @@ fun UserInput(textState: MutableState<String>, modifier: Modifier = Modifier){
         label = {Text("Enter some text")},
         modifier = modifier
             .fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 }
 
@@ -92,8 +110,31 @@ fun SubmitButton(
     modifier: Modifier = Modifier)
 {
     Button(onClick = {onSubmit(textState, submittedText)}, modifier = modifier) {
-        Text("Submit")
+        Text("Submit1")
     }
+
+}
+
+@Composable
+fun NetworkSubmitButton(
+    requestState: MutableState<String>,
+    responseState: MutableState<String>,
+    viewModel: NetworkViewModel = viewModel(),
+    modifier: Modifier = Modifier)
+{
+    Button(
+        onClick = {viewModel.fetchDataFromServer("11702848", responseState)},
+        modifier = modifier) {
+        Text("Submit to Network")
+    }
+}
+
+@Composable
+fun ResponseText(
+    responseState: MutableState<String>,
+    modifier: Modifier = Modifier
+) {
+    Text(text = responseState.value)
 }
 
 /**
@@ -103,6 +144,7 @@ fun SubmitButton(
 fun handleSubmission(textState: MutableState<String>, submittedText: MutableState<String>) {
     submittedText.value = textState.value
     textState.value = ""
+
 }
 
 @Composable
