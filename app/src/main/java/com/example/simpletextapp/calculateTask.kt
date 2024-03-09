@@ -12,14 +12,14 @@ fun sortDigits(number: String): String {
 
     // sort even digits in ascending order:
     val evenDigits = digits.filter { it.isDigit() && it.code % 2 == 0 }
-    evenDigits.sortedBy { it.code }
+    val sortedEvenDigits = evenDigits.sortedBy { it.code }
 
     // sort odd digits in ascending order:
     val oddDigits = digits.filter { it.isDigit() && it.code % 2 != 0 }
-    oddDigits.sortedBy { it.code }
+    val sortedOddDigits = oddDigits.sortedBy { it.code }
 
     // concatenate the char arrays:
-    val sortedDigits = evenDigits + oddDigits
+    val sortedDigits = sortedEvenDigits + sortedOddDigits
 
     // a bit inefficient to check for invalid input here but it works
     return if (sortedDigits.size != number.length) {

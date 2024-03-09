@@ -57,6 +57,7 @@ fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel())
         mutableStateOf("")
     }
 
+    // old, didn't work:
     /*val serverResponseState = remember {
         mutableStateOf("")
     }*/
@@ -71,7 +72,7 @@ fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel())
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 Spacer(
                     modifier = Modifier
-                        .height(100.dp))
+                        .height(40.dp))
 
                 UserInputTextField(matNoState = matNoState, modifier = Modifier)
 
@@ -157,11 +158,11 @@ fun ServerResponseText(serverResponseState: State<String>, modifier: Modifier = 
         .background(Color.LightGray) ) {
         Text(
             text = "Server Response: ",
-            fontSize = 10.sp,
+            //fontSize = 10.sp,
             modifier = modifier.padding(16.dp))
         Text(
             text = serverResponseState.value,
-            fontSize = 10.sp,
+            //fontSize = 10.sp,
             modifier = modifier.padding(16.dp)
         )
     }
