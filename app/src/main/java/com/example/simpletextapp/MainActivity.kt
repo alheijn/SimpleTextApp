@@ -7,7 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -25,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import sortDigits   // custom function for calculation task 3
+import sortDigits
 
 
 class MainActivity : ComponentActivity() {
@@ -56,7 +58,11 @@ fun TextApp(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.background
         ) {
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-                UserInput(textState = textState, modifier)
+                Spacer(
+                    modifier = Modifier
+                        .height(100.dp))
+
+                UserInputTextField(textState = textState, modifier = Modifier)
 
 /*                SubmitButton(onClick = {
                         submittedText.value = textState.value
@@ -82,7 +88,7 @@ fun TextApp(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UserInput(textState: MutableState<String>, modifier: Modifier = Modifier){
+fun UserInputTextField(textState: MutableState<String>, modifier: Modifier = Modifier){
     TextField(
         value = textState.value,
         onValueChange = {textState.value = it},
@@ -100,13 +106,17 @@ fun SubmitButton(
     onSubmit: (MutableState<String>, MutableState<String>) -> Unit,
     modifier: Modifier = Modifier)
 {
-    Button(onClick = {onSubmit(textState, submittedText)}, modifier = modifier) {
-        Text("Submit")
+    Button(
+        onClick = {onSubmit(textState, submittedText)},
+        modifier = modifier
+            .padding(top = 16.dp)) {
+        Text("Submit +\nCalculate")
     }
 }
 
 @Composable
 fun CalculationDisplay(calculatedValueState: MutableState<String>, submittedText: MutableState<String>, modifier: Modifier = Modifier){
+    // calculate the value of the submitted value (see calculateTask.kt):
     calculatedValueState.value = sortDigits(submittedText.value)
 
     Row(modifier = modifier

@@ -1,4 +1,5 @@
 fun sortDigits(number: String): String {
+
     //val digits = number.toString().toCharArray().sortedBy { it.toInt() }
     // 'toInt(): Int' is deprecated. Conversion of Char to Number is deprecated. Use Char.code property instead.
 
@@ -20,5 +21,11 @@ fun sortDigits(number: String): String {
     // concatenate the char arrays:
     val sortedDigits = evenDigits + oddDigits
 
-    return sortedDigits.joinToString("")
+    // a bit inefficient to check for invalid input here but it works
+    return if (sortedDigits.size != number.length) {
+        "Not a valid number"
+    } else {
+        sortedDigits.joinToString("")
+    }
+
 }
