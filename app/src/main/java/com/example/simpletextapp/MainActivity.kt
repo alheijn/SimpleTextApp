@@ -1,6 +1,7 @@
 package com.example.simpletextapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -28,6 +29,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import sortDigits
 
 
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TextApp(modifier = Modifier.padding(8.dp))
         }
+
     }
 }
 
@@ -52,6 +56,11 @@ fun TextApp(modifier: Modifier = Modifier) {
     val calculatedValueState = remember {
         mutableStateOf("")
     }
+
+    val serverResponseState = remember {
+        mutableStateOf("")
+    }
+
 
     MaterialTheme {
         Surface(
@@ -71,9 +80,11 @@ fun TextApp(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
                 )*/
-                Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally).padding(top = 16.dp)) {
+                Row(modifier = Modifier
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)) {
                     SubmitAndCalcButton(
-                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState,
+                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState, serverResponseState = serverResponseState,
                         onSubmit = ::handleSubmission,
                         modifier = Modifier
                     )
@@ -89,6 +100,8 @@ fun TextApp(modifier: Modifier = Modifier) {
                 SubmittedValueText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
 
                 CalculatedValueDisplay(calculatedValueState = calculatedValueState, modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                ServerResponseText(serverResponseState)
 
             }
         }
@@ -112,15 +125,42 @@ fun SubmitAndCalcButton(
     matNoState: MutableState<String>,
     submittedText: MutableState<String>,
     calculatedValueState: MutableState<String>,
+    serverResponseState: MutableState<String>,
     onSubmit: (MutableState<String>, MutableState<String>, MutableState<String>) -> Unit,
+    viewModel: MyViewModel = viewModel(),
     modifier: Modifier = Modifier)
 {
+    //val viewModel: MyViewModel = viewModel()    // viewModel for network-communication coroutine scope
+
     Button(
-        onClick = {onSubmit(matNoState, submittedText, calculatedValueState)},
+        onClick = {
+            onSubmit(matNoState, submittedText, calculatedValueState)
+            viewModel.fetchData()   // "update" viewModel
+            serverResponseState.value = viewModel.responseState.value   // get new data from viewModel
+            Log.d("SubmitAndCalcButton onClick()", "serverResponseState.value = ${serverResponseState.value}")
+                  },
         modifier = Modifier
             .padding(end = 16.dp)
             .height(60.dp)) {
         Text("Submit +\nCalculate", textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+fun ServerResponseText(serverResponseState: MutableState<String>, modifier: Modifier = Modifier){
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+        .background(Color.LightGray) ) {
+        Text(
+            text = "Server Response: ",
+            fontSize = 10.sp,
+            modifier = modifier.padding(16.dp))
+        Text(
+            text = serverResponseState.value,
+            fontSize = 10.sp,
+            modifier = modifier.padding(16.dp)
+        )
     }
 }
 
