@@ -19,7 +19,8 @@ Das Ergebnis soll wieder am Bildschirm ausgegeben werden.
 Nutzen Sie dafür das existierende Nummernfeld und Textfeld für Ein- und Ausgabe. 
 Fügen Sie außerdem noch einen weiteren Button ein, der die Berechnung auslöst."
 
-Meine Matrikelnummer: 11702848
+Meine Matrikelnummer: 11702848.
+
 Matrikelnummer mod 7 = 3 (siehe Wolframalpha: https://www.wolframalpha.com/input?i=11702848+mod+7)
 Daraus ergibt sich folgende Aufgabe:
 
