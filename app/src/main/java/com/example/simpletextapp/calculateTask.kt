@@ -1,7 +1,10 @@
+package com.example.simpletextapp
+
 fun sortDigits(number: String): String {
 
+    // initial approach:
     //val digits = number.toString().toCharArray().sortedBy { it.toInt() }
-    // 'toInt(): Int' is deprecated. Conversion of Char to Number is deprecated. Use Char.code property instead.
+    // however: "'toInt(): Int' is deprecated. Conversion of Char to Number is deprecated. Use Char.code property instead."
 
     // functional programming rocks! very simple solution :D
     // if we want to turn things around: .sortedByDescending{ it.code }

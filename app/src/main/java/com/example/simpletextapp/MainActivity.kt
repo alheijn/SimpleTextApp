@@ -30,9 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import sortDigits
 
 
 class MainActivity : ComponentActivity() {
@@ -86,9 +84,9 @@ fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel())
                     .align(alignment = Alignment.CenterHorizontally)
                     .padding(top = 16.dp)) {
                     SubmitAndCalcButton(
+                        modifier = Modifier,
                         matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState,
-                        onSubmit = ::handleSubmission,
-                        modifier = Modifier
+                        onSubmit = ::handleSubmission
                     )
                     // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
 
@@ -124,13 +122,13 @@ fun UserInputTextField(matNoState: MutableState<String>, modifier: Modifier = Mo
 
 @Composable
 fun SubmitAndCalcButton(
+    modifier: Modifier = Modifier,
     matNoState: MutableState<String>,
     submittedText: MutableState<String>,
     calculatedValueState: MutableState<String>,
     //serverResponseState: MutableState<String>,
     onSubmit: (MutableState<String>, MutableState<String>, MutableState<String>) -> Unit,
-    viewModel: MyViewModel = viewModel(),
-    modifier: Modifier = Modifier)
+    viewModel: MyViewModel = viewModel())
 {
     //val viewModel: MyViewModel = viewModel()    // viewModel for network-communication coroutine scope
 
