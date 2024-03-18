@@ -19,7 +19,8 @@ Das Ergebnis soll wieder am Bildschirm ausgegeben werden.
 Nutzen Sie dafür das existierende Nummernfeld und Textfeld für Ein- und Ausgabe. 
 Fügen Sie außerdem noch einen weiteren Button ein, der die Berechnung auslöst."
 
-Meine Matrikelnummer: 11702848
+Meine Matrikelnummer: 11702848.
+
 Matrikelnummer mod 7 = 3 (siehe Wolframalpha: https://www.wolframalpha.com/input?i=11702848+mod+7)
 Daraus ergibt sich folgende Aufgabe:
 
@@ -32,6 +33,7 @@ Wahrscheinlich werde ich die Aufgabe nach dieser Fertigstellung noch einmal von 
 da in der Gruppenarbeit während dem Semester wohl eher damit gearbeitet werden wird. 
 Für wen auch immer diese Abgabe korrigieren muss, es tut mir leid :D
 It's not pretty but it works...
+
 ![Screenshot 2024-03-09 at 23 09 32](https://github.com/alheijn/SimpleTextApp/assets/72282853/8de7f318-4b1f-4afd-982c-b94a2c8727bc)
 ![Screenshot 2024-03-09 at 23 11 21](https://github.com/alheijn/SimpleTextApp/assets/72282853/8760279d-f833-477e-9ab2-92c555855a0d)
 
