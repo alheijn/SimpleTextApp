@@ -70,9 +70,13 @@ fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel())
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 Spacer(
                     modifier = Modifier
-                        .height(40.dp))
+                        .height(40.dp)
+                )
 
-                UserInputTextField(matNoState = matNoState, modifier = Modifier)
+                UserInputTextField(
+                    matNoState = matNoState,
+                    modifier = Modifier
+                )
 
                 /*SubmitButton(onClick = {
                         submittedText.value = textState.value
@@ -82,26 +86,40 @@ fun TextApp(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel())
                 )*/
                 Row(modifier = Modifier
                     .align(alignment = Alignment.CenterHorizontally)
-                    .padding(top = 16.dp)) {
+                    .padding(top = 16.dp)
+                ) {
                     SubmitAndCalcButton(
                         modifier = Modifier,
-                        matNoState = matNoState, submittedText = submittedText, calculatedValueState = calculatedValueState,
+                        matNoState = matNoState,
+                        submittedText = submittedText,
+                        calculatedValueState = calculatedValueState,
                         onSubmit = ::handleSubmission
                     )
                     // :: is the reference operator. we use it to pass the reference of handleSubmission to the onSubmit parameter
-
-                    CalculateButton(matNoState = matNoState, calculatedValueState = calculatedValueState)
+                    // I (probably?) wouldn't need it if I used & passed a lambda instead... but nice to see how it works
+                    CalculateButton(
+                        matNoState = matNoState,
+                        calculatedValueState = calculatedValueState
+                    )
 
                 }
 
                 /*if (submittedText.value.isNotEmpty()){
                     SubmittedText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
                 }*/
-                SubmittedValueText(text = submittedText.value, modifier = Modifier.align(Alignment.CenterHorizontally))
+                SubmittedValueText(
+                    text = submittedText.value,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
-                CalculatedValueDisplay(calculatedValueState = calculatedValueState, modifier = Modifier.align(Alignment.CenterHorizontally))
+                CalculatedValueDisplay(
+                    calculatedValueState = calculatedValueState,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
-                ServerResponseText(serverResponseState)
+                ServerResponseText(
+                    serverResponseState = serverResponseState
+                )
 
             }
         }
@@ -149,7 +167,10 @@ fun SubmitAndCalcButton(
 }
 
 @Composable
-fun ServerResponseText(serverResponseState: State<String>, modifier: Modifier = Modifier){
+fun ServerResponseText(
+    serverResponseState: State<String>,
+    modifier: Modifier = Modifier
+) {
     Row(modifier = modifier
         .fillMaxWidth()
         .padding(16.dp)
@@ -170,7 +191,11 @@ fun ServerResponseText(serverResponseState: State<String>, modifier: Modifier = 
  * called when the submit button is clicked.
  * writes textState content to submittedText
  */
-fun handleSubmission(matNoState: MutableState<String>, submittedText: MutableState<String>, calculatedValueState: MutableState<String>) {
+fun handleSubmission(
+    matNoState: MutableState<String>,
+    submittedText: MutableState<String>,
+    calculatedValueState: MutableState<String>
+) {
     submittedText.value = matNoState.value
     matNoState.value = ""
     // calculate the value of the submitted value (see calculateTask.kt):
@@ -178,7 +203,10 @@ fun handleSubmission(matNoState: MutableState<String>, submittedText: MutableSta
 }
 
 @Composable
-fun SubmittedValueText(text: String, modifier: Modifier = Modifier){
+fun SubmittedValueText(
+    text: String,
+    modifier: Modifier = Modifier
+){
     Row(modifier = modifier
         .fillMaxWidth()
         .padding(16.dp)
@@ -194,7 +222,11 @@ fun SubmittedValueText(text: String, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun CalculateButton(matNoState: MutableState<String>, calculatedValueState: MutableState<String>, modifier: Modifier = Modifier){
+fun CalculateButton(
+    matNoState: MutableState<String>,
+    calculatedValueState: MutableState<String>,
+    modifier: Modifier = Modifier
+){
     Button(
         onClick = {
             calculatedValueState.value = sortDigits(matNoState.value)
@@ -208,7 +240,10 @@ fun CalculateButton(matNoState: MutableState<String>, calculatedValueState: Muta
 }
 
 @Composable
-fun CalculatedValueDisplay(calculatedValueState: MutableState<String>, modifier: Modifier = Modifier){
+fun CalculatedValueDisplay(
+    calculatedValueState: MutableState<String>,
+    modifier: Modifier = Modifier
+){
 
     Row(modifier = modifier
         .fillMaxWidth()
